@@ -13,10 +13,28 @@ export default function App() {
     setRepositories(data);
   }, []);
 
+  useEffect(() => {
+    const filtred = repositories.filter(repo => repo.favorite);
+
+    document.title = `${filtred.length} favorito(s)`;
+  }, [repositories]);
+
+  function handleFavorite(id) {
+    const newRepositories = repositories.map(repo => {
+      return repo.id === id ? { ...repo, favorite: !repo.favorite } : repo;
+    });
+
+    setRepositories(newRepositories);
+  }
+
   return (
     <ul>
       {repositories.map(repo => (
-        <li key={repo.id}> {repo.name}</li>
+        <li key={repo.id}>
+          {repo.name}
+          {repo.favorite && <span>(Favorito)</span>}
+          <button onClick={() => handleFavorite(repo.id)}>Favoritar</button>
+        </li>
       ))}
     </ul>
   );
